@@ -25,9 +25,6 @@ func main() {
 		return c.JSON(http.StatusOK, "hello")
 	})
 	e.POST("/echo", func(c echo.Context) error {
-		// Read form fields
-		name := c.FormValue("name")
-
 		//-----------
 		// Read file
 		//-----------
