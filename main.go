@@ -3,12 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/kazix-mrs/factory"
 	"github.com/labstack/echo"
 )
 
@@ -21,36 +21,14 @@ func main() {
 		*appEnv = `./`
 	}
 
+	fac := factory.Factory{JsonConfigPath: *appEnv}
+
+	fac.Initialize()
+
 	e.GET("/say", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, "hello")
 	})
 	e.POST("/echo", func(c echo.Context) error {
-		//-----------
-		// Read file
-		//-----------
-
-		// Source
-		file, err := c.FormFile("file")
-		if err != nil {
-			return err
-		}
-		src, err := file.Open()
-		if err != nil {
-			return err
-		}
-		defer src.Close()
-
-		// Destination
-		dst, err := os.Create(file.Filename)
-		if err != nil {
-			return err
-		}
-		defer dst.Close()
-
-		// Copy
-		if _, err = io.Copy(dst, src); err != nil {
-			return err
-		}
 		return c.JSON(http.StatusOK, "success")
 	})
 
